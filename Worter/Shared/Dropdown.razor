@@ -1,0 +1,23 @@
+﻿<select class="form-control" @onchange="OnSelectChange" disabled="@Disable">
+    @if (AddEmpty)
+    { 
+        <option value="0"></option>
+    }
+    @foreach (var item in DropdownItems)
+    {
+        <option value="@item.Value">@item.Label</option>
+    }
+</select>
+
+@code {
+    [Parameter] public bool AddEmpty { get; set; } 
+    [Parameter] public bool Disable { get; set; } 
+
+    [Parameter] public IEnumerable<Worter.Common.IDropdownItem> DropdownItems { get; set; }
+    [Parameter] public EventCallback<int> OnChange { get; set; }
+
+    private void OnSelectChange(ChangeEventArgs e)
+    {
+        OnChange.InvokeAsync(int.Parse(e.Value.ToString()));
+    }
+}

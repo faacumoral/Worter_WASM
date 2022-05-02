@@ -1,0 +1,17 @@
+﻿@page "/"
+@inject Blazored.SessionStorage.ISessionStorageService SessionStorage
+@inject NavigationManager NavigationManager
+
+<h1>Welcome to Worter App!</h1>
+
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+        var isLog = await SessionStorage.ExistsJWTAsync();
+        if (!isLog)
+        {
+            NavigationManager.GoLogin();
+        }
+    }
+}

@@ -1,0 +1,83 @@
+@page "/learn"
+@inherits LearnBase
+
+<div class="row form-row">
+    <div class="col-lg-2 col-sm-4">Languages:</div>
+    <div class="col-lg-10 col-sm-8">
+        <Dropdown DropdownItems="languages"
+                  AddEmpty="true"
+                  OnChange="(id) => idLanguage = id"
+                  Disable="languageSelected" />
+    </div>
+</div>
+<div class="row form-row">
+    <div class="col-12">
+        @if (languageSelected)
+        {
+            <button class="btn btn-warning" @onclick="() => languageSelected = false">Change language</button>
+        }
+        else
+        {
+            <button class="btn btn-success" @onclick="ConfirmLanguage">Confirm language</button>
+        }
+    </div>
+</div>
+
+<hr />
+
+@if (languageSelected)
+{
+    if (learns.Count == 0)
+    {
+        <div class="row form-row">
+            <div class="col-12">
+                <button class="btn btn-success" @onclick="StartLearn">Learn!</button>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row form-row">
+            <div class="col-lg-4 col-sm-12">
+                <input disabled="disabled" class="form-control" @bind="learn.Word"/>
+            </div>
+            <div class="col-lg-1 col-sm-12" style="text-align:center;">
+                <h3>?</h3>
+            </div>
+            <div class="col-lg-6 col-sm-12">
+                @foreach (var answer in learn.UserAnswers)
+                {
+                    <div class="row form-row">
+                        <div class="col-11">
+                            <input  
+                                   disabled="@answer.IsCorrect" 
+                                   class="form-control"
+                                   @bind-value="answer.UserAnswer" 
+                                   @bind-value:event="oninput"
+                                   @onkeyup="(KeyboardEventArgs) => CheckAnswer(answer)"
+                                   />
+                        </div>
+                        <div class="col-1">
+                            @if (answer.IsCorrect)
+                            {
+                                <i class="fas fa-check-circle" style="color:green;font-size: 170%;"></i>
+                            }
+                        </div>
+                    </div>
+                    
+                }
+            </div>
+        </div>
+        <div class="row form-row">
+            <div class="col-10">
+                <button class="btn btn-warning" @onclick="DontKnow">
+                    Don't know!
+                </button>
+                <button class="btn btn-success pull-right" @onclick="Next" disabled="@learn.UserAnswers.All(a => !a.IsCorrect)">
+                    Next ! &nbsp; <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+        @learns.Count
+    }
+}
