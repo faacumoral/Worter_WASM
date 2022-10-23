@@ -19,7 +19,6 @@ namespace Worter.API.Controllers
         }
 
         #region POST
-        [Route("AddTranslate")]
         [HttpPost]
         public IntResult PostTranslate([FromBody]TranslateDTO word)
             => _wordService.Add(word, UserId);
